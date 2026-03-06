@@ -1,0 +1,548 @@
+﻿<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Success Computer Institute — Student Helpdesk</title>
+<style>
+:root {
+  --gold: #FFD700;
+  --gold2: #FFA500;
+  --gold3: #FF8C00;
+  --green: #00FF87;
+  --wa: #25D366;
+  --cream: #FFF8E7;
+  --dark: #040100;
+  --card: rgba(20,8,0,0.9);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #040100;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--cream);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(80,25,0,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(60,18,0,0.4) 0%, transparent 55%);
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  padding: 36px 20px 24px;
+  border-bottom: 1px solid rgba(255,165,0,0.2);
+  background: rgba(4,1,0,0.95);
+}
+.star-anim {
+  font-size: 40px; display: inline-block;
+  animation: glow 2.5s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+@keyframes glow {
+  0%,100% { filter: drop-shadow(0 0 4px rgba(255,200,0,0.4)); }
+  50%      { filter: drop-shadow(0 0 20px rgba(255,200,0,1)) drop-shadow(0 0 40px rgba(255,120,0,0.5)); }
+}
+.header h1 {
+  font-size: clamp(20px, 5vw, 30px); font-weight: 900;
+  letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(160deg, #ffe566, #FFD700, #FF8C00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-sub {
+  font-family: Arial, sans-serif; font-size: 12px;
+  letter-spacing: 3px; color: rgba(255,200,80,0.45);
+  margin-top: 6px; text-transform: uppercase;
+}
+
+/* ── TOP CONTACT BAR ── */
+.contact-bar {
+  display: flex; justify-content: center;
+  gap: 12px; flex-wrap: wrap;
+  padding: 14px 20px;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(255,165,0,0.1);
+}
+.cbtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 6px;
+  font-family: Arial, sans-serif; font-size: 14px; font-weight: bold;
+  text-decoration: none; cursor: pointer; border: none;
+  letter-spacing: 0.5px; transition: all 0.2s;
+}
+.cbtn-wa {
+  background: var(--wa); color: #fff;
+}
+.cbtn-wa:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.35); }
+.cbtn-call {
+  background: rgba(255,140,0,0.12);
+  border: 1px solid rgba(255,165,0,0.45); color: var(--gold);
+}
+.cbtn-call:hover { background: rgba(255,165,0,0.2); transform: translateY(-2px); }
+
+/* ── CONTAINER ── */
+.wrap { max-width: 840px; margin: 0 auto; padding: 32px 16px 60px; }
+
+.sec-label {
+  font-family: Arial, sans-serif; font-size: 11px;
+  letter-spacing: 4px; color: rgba(255,180,60,0.5);
+  text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sec-label::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, rgba(255,165,0,0.25), transparent);
+}
+
+/* ── DOUBT GRID ── */
+.grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 10px;
+}
+@media(max-width:560px){ .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: rgba(18,6,0,0.92);
+  border: 1px solid rgba(255,165,0,0.18);
+  border-radius: 10px; padding: 18px 16px;
+  cursor: pointer; transition: all 0.25s;
+  user-select: none;
+}
+.card:hover {
+  border-color: rgba(255,165,0,0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255,100,0,0.15);
+}
+.card.open {
+  border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(255,200,0,0.18);
+}
+.card-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+.card-q { font-size: 14px; font-weight: bold; color: var(--cream); line-height: 1.45; }
+.card-tap {
+  font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 1.5px;
+  color: rgba(255,165,0,0.35); margin-top: 6px; text-transform: uppercase;
+}
+.card.open .card-tap { color: var(--gold); }
+
+.hint {
+  text-align: center; font-family: Arial, sans-serif;
+  font-size: 11px; letter-spacing: 2px;
+  color: rgba(255,165,0,0.3); margin-bottom: 20px; text-transform: uppercase;
+}
+
+/* ── ANSWER BOX ── */
+.ans-box {
+  display: none; background: rgba(8,2,0,0.97);
+  border: 1px solid rgba(255,165,0,0.28);
+  border-radius: 10px; padding: 24px 22px;
+  margin-bottom: 28px; position: relative; overflow: hidden;
+  animation: slideIn 0.35s ease;
+}
+.ans-box::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, #FFD700, transparent);
+}
+.ans-box.show { display: block; }
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.ans-title {
+  font-size: 16px; font-weight: bold;
+  color: var(--gold); margin-bottom: 16px; letter-spacing: 1px;
+}
+.point { display: flex; gap: 12px; margin-bottom: 13px; align-items: flex-start; }
+.pi { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.pt {
+  font-family: Arial, sans-serif; font-size: 14px;
+  line-height: 1.75; color: rgba(255,240,200,0.88);
+}
+.pt b { color: var(--gold); }
+
+.proof-bar {
+  background: rgba(0,255,135,0.06); border: 1px solid rgba(0,255,135,0.18);
+  border-radius: 8px; padding: 13px 16px; margin-top: 14px;
+  font-family: Arial, sans-serif; font-size: 13px;
+  color: rgba(0,255,135,0.85); line-height: 1.6;
+}
+.proof-bar b { color: var(--green); }
+
+/* ── ANS BUTTONS ROW ── */
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+.cta-gold {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #FF8C00, #FFD700);
+  color: #000; font-weight: bold; font-family: Arial, sans-serif;
+  font-size: 13px; letter-spacing: 1.5px;
+  padding: 11px 22px; border-radius: 5px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase;
+}
+.cta-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,165,0,0.35); }
+
+.cta-wa {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--wa); color: #fff; font-weight: bold;
+  font-family: Arial, sans-serif; font-size: 13px; letter-spacing: 1px;
+  padding: 11px 22px; border-radius: 5px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.2s;
+}
+.cta-wa:hover { background: #1ebe5d; transform: translateY(-2px); }
+
+/* ── CUSTOM QUESTION ── */
+.custom-box {
+  background: rgba(18,6,0,0.92);
+  border: 1px solid rgba(255,165,0,0.18);
+  border-radius: 10px; padding: 24px; margin-bottom: 28px;
+}
+.custom-box .desc {
+  font-family: Arial, sans-serif; font-size: 14px;
+  color: rgba(255,200,80,0.6); margin-bottom: 6px;
+}
+.custom-box .desc2 {
+  font-family: Arial, sans-serif; font-size: 12px;
+  color: rgba(0,255,135,0.5); margin-bottom: 16px; letter-spacing: 0.3px;
+}
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.qinput {
+  flex: 1; min-width: 220px;
+  background: rgba(0,0,0,0.6); border: 1px solid rgba(255,165,0,0.2);
+  border-radius: 6px; padding: 12px 16px;
+  color: var(--cream); font-family: Arial, sans-serif; font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.qinput:focus { border-color: rgba(255,165,0,0.6); }
+.qinput::placeholder { color: rgba(255,200,80,0.22); }
+
+.sbtn {
+  background: var(--wa); color: #fff; font-weight: bold;
+  font-family: Arial, sans-serif; font-size: 13px; letter-spacing: 1px;
+  padding: 12px 22px; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap; border: none;
+  display: flex; align-items: center; gap: 6px;
+}
+.sbtn:hover { background: #1ebe5d; transform: translateY(-2px); }
+
+/* ── QA LIST ── */
+.qa-list { margin-top: 14px; display: none; }
+.qa-list.show { display: block; }
+
+.qa-item {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,165,0,0.1);
+  border-radius: 8px; padding: 16px; margin-bottom: 12px;
+  animation: slideIn 0.3s ease;
+}
+.qa-q {
+  font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px;
+  color: rgba(255,165,0,0.4); margin-bottom: 8px; text-transform: uppercase;
+}
+.qa-a {
+  font-family: Arial, sans-serif; font-size: 14px;
+  line-height: 1.8; color: rgba(255,240,200,0.85); white-space: pre-wrap;
+}
+.wa-sent-note {
+  font-family: Arial, sans-serif; font-size: 12px;
+  color: rgba(37,211,102,0.7); margin-top: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: rgba(4,1,0,0.98);
+  border-top: 1px solid rgba(255,165,0,0.15);
+  text-align: center; padding: 28px 20px;
+}
+.footer-name {
+  font-size: 16px; font-weight: bold;
+  color: var(--gold); letter-spacing: 2px; margin-bottom: 12px;
+}
+.footer-info {
+  font-family: Arial, sans-serif; font-size: 14px;
+  color: rgba(255,200,80,0.5); line-height: 2.2; letter-spacing: 0.5px;
+}
+.footer-info a { color: var(--green); text-decoration: none; }
+.footer-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="star-anim">⭐</div>
+  <h1>Success Computer Institute</h1>
+  <div class="header-sub">Student Helpdesk — Aapke Sawaalon Ke Jawab</div>
+</div>
+
+<!-- TOP CONTACT BAR -->
+<div class="contact-bar">
+  <a class="cbtn cbtn-wa" href="https://wa.me/919695601648?text=Namaste!%20Mujhe%20Success%20Computer%20Institute%20ke%20baare%20mein%20jaankari%20chahiye." target="_blank">
+    💬 WhatsApp Karein
+  </a>
+  <a class="cbtn cbtn-call" href="tel:9695601648">
+    📞 Abhi Call Karein — 9695601648
+  </a>
+</div>
+
+<div class="wrap">
+
+  <!-- DOUBT CARDS -->
+  <div class="sec-label">Common Sawaal — Click Karein</div>
+  <p class="hint">👆 Apna sawaal chunein — seedha jawab milega</p>
+
+  <div class="grid">
+    <div class="card" onclick="toggle('a1',this)">
+      <span class="card-icon">⏰</span>
+      <div class="card-q">"Abhi kyun karun? Baad mein bhi kar sakta hoon!"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a2',this)">
+      <span class="card-icon">🏫</span>
+      <div class="card-q">"Kisi bhi institute se kar lunga — yahan khaas kya hai?"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a3',this)">
+      <span class="card-icon">📍</span>
+      <div class="card-q">"Institute door hai, paas wala le lunga!"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a4',this)">
+      <span class="card-icon">💰</span>
+      <div class="card-q">"Fees zyada hai, sasta wala dhundhunga!"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a5',this)">
+      <span class="card-icon">📜</span>
+      <div class="card-q">"Certificate kaam aayega? Government job mein valid hai?"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a6',this)">
+      <span class="card-icon">👩‍💻</span>
+      <div class="card-q">"Computer bilkul nahi aata — main seekh sakta/sakti hoon?"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a7',this)">
+      <span class="card-icon">🎓</span>
+      <div class="card-q">"Kaun sa course best hai mere liye?"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+    <div class="card" onclick="toggle('a8',this)">
+      <span class="card-icon">📅</span>
+      <div class="card-q">"Classes ka time kya hai? Main busy rehta/rehti hoon!"</div>
+      <div class="card-tap">▶ Jawab Dekhein</div>
+    </div>
+  </div>
+
+  <!-- ANSWER PANEL -->
+  <div class="ans-box" id="ans-box">
+    <div class="ans-title" id="ans-title"></div>
+    <div id="ans-body"></div>
+  </div>
+
+  <!-- CUSTOM QUESTION → WHATSAPP -->
+  <div class="sec-label" style="margin-top:10px">Apna Sawaal Poochhein</div>
+  <div class="custom-box">
+    <p class="desc">Koi bhi sawaal likhein 👇</p>
+    <p class="desc2">✅ Aapka sawaal seedha hamari WhatsApp pe bheja jaayega — hum turant reply karenge!</p>
+    <div class="row">
+      <input class="qinput" id="qinput" type="text"
+        placeholder="Jaise: Course kitne mahine ka hai? Job milegi?" />
+      <button class="sbtn" onclick="sendToWhatsApp()">
+        💬 WhatsApp Pe Bhejo
+      </button>
+    </div>
+    <div class="qa-list" id="qa-list"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-name">⭐ SUCCESS COMPUTER INSTITUTE ⭐</div>
+  <div class="footer-info">
+    📍 Balamau, Kachhauna Chauraha, Gausganj Road<br>
+    🌐 <a href="http://www.stiedu.in" target="_blank">www.stiedu.in</a>
+  </div>
+  <div class="footer-btns">
+    <a class="cbtn cbtn-wa" href="https://wa.me/919695601648?text=Namaste!%20Mujhe%20Success%20Computer%20Institute%20ke%20baare%20mein%20jaankari%20chahiye." target="_blank">
+      💬 WhatsApp Karein
+    </a>
+    <a class="cbtn cbtn-call" href="tel:9695601648">
+      📞 9695601648
+    </a>
+  </div>
+</div>
+
+<script>
+const WA_NUMBER = "919695601648";
+
+const DATA = {
+  a1: {
+    title: "⏰ Abhi Kyun Karein — Baad Mein Kyun Nahi?",
+    points: [
+      ["🏛️", "<b>Government Job Forms!</b> Aajkal 90% sarkari naukri mein computer certificate zaroori hai — Lekhpal, Police, Bank, Railway sab mein. Certificate nahi toh <b>form bhi nahi bhar sakte!</b>"],
+      ["🎁", "<b>Yeh Offer Sirf Abhi Hai!</b> Basic Course ke saath CCC + Tally bilkul FREE — limited time offer. Baad mein aoge toh alag fees lagegi."],
+      ["📈", "<b>Career Mein Aage Rahoge!</b> Jo student pehle seekhta hai woh 1-2 saal aage rehta hai. Job mein confidence aur experience dono zyada."],
+      ["🕐", '"Baad mein" kabhi nahi aata — ghar, zimmedari, paisa sab badhta jaata hai. <b>Abhi free time hai — abhi hi seekho!</b>']
+    ],
+    proof: null,
+    waMsg: "Namaste! Mujhe jaankari chahiye — abhi admission lene ke kya fayde hain? Aur kaunsa special offer chal raha hai?"
+  },
+  a2: {
+    title: "🏆 Success Institute Khaas Kyun Hai?",
+    points: [
+      ["💼", "<b>95% Real Placement!</b> Hamare students sirf certificate lekar nahi jaate — unhe actual job milti hai. <b>Real student contacts available hain — seedha unse baat karo!</b>"],
+      ["📞", "<b>Student Proof:</b> Hamare paas un students ke numbers hain jo aaj job kar rahe hain. Koi bhi doosra local institute yeh confidence nahi deta!"],
+      ["📜", "<b>Government Certified Certificate</b> — poore India mein valid, sarkari jobs ke forms mein accept hota hai."],
+      ["👨‍🏫", "<b>Expert Faculty + Practical Training</b> — sirf theory nahi, real computer par seekho jo actual job mein kaam aaye."]
+    ],
+    proof: "<b>Real proof chahiye?</b> Hamare placed students se seedha baat kar sakte hain aap!",
+    waMsg: "Namaste! Mujhe Success Computer Institute ke baare mein jaanna hai — aapke placed students se baat karna chahta/chahti hoon. Please guide karein."
+  },
+  a3: {
+    title: "📍 Door Hai Toh Kya? Quality Dekho!",
+    points: [
+      ["🚌", "<b>Thodi Door, Badi Zindagi!</b> Ek baar ki thodi mehnat — ek baar ka course — life bhar kaam aayega. Auto/bus bhi available hai Balamau tak."],
+      ["⚠️", "<b>Sochiye:</b> Paas waala sasta lagta hai — lekin certificate kaam nahi aaya toh paisa aur time dono barbaad. <b>Distance se zyada Quality maayni rakhti hai!</b>"],
+      ["🌐", "<b>Online Support bhi milti hai!</b> WhatsApp par ghar pe bhi help milti hai — sirf classes ke liye aana hai, baaki support 24/7."],
+      ["🤝", "Hamare <b>95% placement network</b> ki wajah sirf hamare students ke liye kaam karta hai — kisi bhi doosre local institute ka yeh record nahi!"]
+    ],
+    proof: null,
+    waMsg: "Namaste! Institute thoda door hai mere liye — kya aap mujhe best route ya convenience ke baare mein guide kar sakte hain?"
+  },
+  a4: {
+    title: "💰 Fees Kam Nahi — Value Zyada Hai!",
+    points: [
+      ["🎁", "<b>Sabse Best Deal Abhi!</b> Basic Course ke saath CCC + Tally bilkul FREE — matlab ek fees mein teen courses!"],
+      ["🧮", "<b>Sochiye:</b> Ek baar 3-4 hazar rupaye lagao — aur uske baad 15,000-25,000/mahine ki naukri. Yeh investment hai, kharcha nahi!"],
+      ["❌", "Sasta institute, bekar certificate — <b>form nahi bhar sakte, job nahi milti.</b> Phir dobara paisa lagao. <b>Ek baar sahi jagah lagao!</b>"],
+      ["✅", "Hamare <b>100% result</b> aur <b>95% placement</b> ka matlab — aapka paisa 100% kaam karta hai."]
+    ],
+    proof: null,
+    waMsg: "Namaste! Mujhe fees ke baare mein detail chahiye — kaunse kaunse courses hain aur kitni fees hai? Koi offer chal raha hai kya?"
+  },
+  a5: {
+    title: "📜 Certificate Bilkul Valid Hai!",
+    points: [
+      ["🏛️", "<b>Government Certified!</b> Hamare saare certificates central government dvara recognized hain — Lekhpal, Police, Bank, Railway, sab jagah valid."],
+      ["🌍", "<b>Poore India Mein Valid</b> — kisi bhi state mein job karoge, certificate kaam aayega. Sirf local nahi, national level par accepted."],
+      ["📋", "<b>UP Sarkari Forms</b> mein bhi directly use hota hai — ADCA, DCA, CCC sab valid qualifications hain government requirements mein."],
+      ["🏆", "Course complete karte hi certificate milta hai — koi delay nahi, koi extra charge nahi."]
+    ],
+    proof: null,
+    waMsg: "Namaste! Aapke institute ka certificate government jobs mein kaam aata hai? Kaunse courses ke certificates sabse zyada useful hain?"
+  },
+  a6: {
+    title: "👩‍💻 Bilkul Naya Hoon — Koi Baat Nahi!",
+    points: [
+      ["😊", "<b>Zero se Shuru Karein!</b> Hamare courses bilkul basics se start hote hain — mouse, keyboard se lekar professional software tak. Koi bhi seekh sakta hai!"],
+      ["👨‍🏫", "<b>Patient Faculty</b> — teachers kabhi judgment nahi karte. Jo samajh nahi aaya, dobara samjhaya jaata hai jab tak clear nahi ho jaata."],
+      ["💻", "<b>Practical Approach</b> — sirf sun ke nahi, khud haath se karke seekhoge. Isliye concepts jaldi aur pakke hote hain."],
+      ["🎯", "Hamare sabse successful students wahi hain jo <b>pehle bilkul naye the</b> — aaj woh job kar rahe hain!"]
+    ],
+    proof: null,
+    waMsg: "Namaste! Mujhe computer bilkul nahi aata. Kya main aapke yahan se seekh sakta/sakti hoon? Kaunsa course best rahega mere liye?"
+  },
+  a7: {
+    title: "🎓 Aapke Liye Best Course Kaun Sa Hai?",
+    points: [
+      ["🎯", "<b>10th Pass:</b> CCC ya DCA se shuru karein — government job ke liye perfect, kam time mein zyada value."],
+      ["📊", "<b>12th Pass / Graduation:</b> ADCA ya O Level — zyada salary wali jobs ke liye, professional level certification."],
+      ["💹", "<b>Business ke liye:</b> Tally + DFA — GST, accounts, billing sab seekho. Shop ya office ke liye ideal."],
+      ["🖥️", "<b>Job Seekers ke liye:</b> MDIT ya CHNM — government aur private dono mein demand hai."]
+    ],
+    proof: null,
+    waMsg: "Namaste! Mujhe guide karein — main [apni qualification likhein] hoon, mere liye kaun sa course best rahega?"
+  },
+  a8: {
+    title: "📅 Time Flexible Hai — Aapke Hisaab Se!",
+    points: [
+      ["🌅", "<b>Morning Batch</b> — school/college se pehle ya baad mein comfortable timing."],
+      ["🌆", "<b>Evening Batch</b> — kaam karne waalon ke liye, din mein aazad rehte hain."],
+      ["📱", "<b>WhatsApp Support</b> — class miss ho gayi? Notes aur help WhatsApp par milti hai."],
+      ["📆", "Chutti ke din bhi extra classes ka option available hai — <b>koi session miss nahi hoga!</b>"]
+    ],
+    proof: null,
+    waMsg: "Namaste! Mujhe class timings ke baare mein jaanna hai — morning aur evening batch ka schedule kya hai?"
+  }
+};
+
+let openCard = null, openId = null;
+
+function toggle(id, card) {
+  const box = document.getElementById('ans-box');
+  if (openId === id) {
+    box.classList.remove('show');
+    card.classList.remove('open');
+    card.querySelector('.card-tap').textContent = '▶ Jawab Dekhein';
+    openId = null; openCard = null; return;
+  }
+  if (openCard) {
+    openCard.classList.remove('open');
+    openCard.querySelector('.card-tap').textContent = '▶ Jawab Dekhein';
+  }
+  card.classList.add('open');
+  card.querySelector('.card-tap').textContent = '✖ Band Karein';
+  openCard = card; openId = id;
+
+  const d = DATA[id];
+  document.getElementById('ans-title').textContent = d.title;
+
+  let html = d.points.map(([icon, text]) =>
+    `<div class="point"><span class="pi">${icon}</span><span class="pt">${text}</span></div>`
+  ).join('');
+  if (d.proof) html += `<div class="proof-bar">📞 ${d.proof}</div>`;
+
+  const waLink = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(d.waMsg)}`;
+  html += `
+    <div class="btn-row">
+      <a class="cta-wa" href="${waLink}" target="_blank">💬 WhatsApp Pe Poochhein</a>
+      <a class="cta-gold" href="tel:9695601648">📞 Call Karein</a>
+    </div>`;
+
+  document.getElementById('ans-body').innerHTML = html;
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+  setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+}
+
+function sendToWhatsApp() {
+  const inp = document.getElementById('qinput');
+  const q = inp.value.trim();
+  if (!q) { inp.focus(); return; }
+
+  const msg = `Namaste! Mera sawaal hai: "${q}" — Please guide karein.`;
+  const waLink = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+  // Open WhatsApp
+  window.open(waLink, '_blank');
+
+  // Show confirmation in chat
+  const list = document.getElementById('qa-list');
+  list.classList.add('show');
+
+  const item = document.createElement('div');
+  item.className = 'qa-item';
+  item.innerHTML = `
+    <div class="qa-q">📩 Aapka Sawaal:</div>
+    <div class="qa-a">${q}</div>
+    <div class="wa-sent-note">✅ Aapka sawaal WhatsApp par bheja ja raha hai — hum jaldi reply karenge!</div>
+  `;
+  list.insertBefore(item, list.firstChild);
+  inp.value = '';
+  setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+}
+
+document.getElementById('qinput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendToWhatsApp();
+});
+</script>
+</body>
+</html>
